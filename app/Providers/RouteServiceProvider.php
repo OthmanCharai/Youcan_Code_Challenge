@@ -5,8 +5,10 @@ namespace App\Providers;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
+use SplFileInfo;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -28,6 +30,37 @@ class RouteServiceProvider extends ServiceProvider
      */
     // protected $namespace = 'App\\Http\\Controllers';
 
+    public function map()
+    {
+        $this->mapWebRoutes();
+
+        $this->mapApiRoutes();
+    }
+    /**
+     * Map Api routes
+     * @return void
+     */
+    protected function mapApiRoutes()
+    {
+        collect(File::allFiles(base_path('routes/api')))->each(function (SplFileInfo $fileInfo) {
+            Route::prefix('api')
+                ->middleware('api')
+                ->namespace($this->namespace)
+                ->group($fileInfo->getRealPath());
+        });
+    }
+
+    /**
+     * Map Web Route
+     * @return void
+     */
+    protected function mapWebRoutes()
+    {
+        Route::middleware('web')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/web.php'));
+    }
+
     /**
      * Define your route model bindings, pattern filters, etc.
      *
@@ -36,17 +69,6 @@ class RouteServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->configureRateLimiting();
-
-        $this->routes(function () {
-            Route::prefix('api')
-                ->middleware('api')
-                ->namespace($this->namespace)
-                ->group(base_path('routes/api.php'));
-
-            Route::middleware('web')
-                ->namespace($this->namespace)
-                ->group(base_path('routes/web.php'));
-        });
     }
 
     /**

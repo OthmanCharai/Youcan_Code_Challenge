@@ -19756,14 +19756,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_products_index__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/products/index */ "./resources/js/components/products/index.vue");
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
-// Depandency goes here
+// Dependency goes here
 
 
 
 // Components go here
 
 
-// define varianbles & const
+// define variables & const
 var routes = [{
   path: "/",
   component: _components_products_index__WEBPACK_IMPORTED_MODULE_1__["default"]
