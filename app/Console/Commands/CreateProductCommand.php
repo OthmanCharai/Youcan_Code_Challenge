@@ -41,20 +41,22 @@ class CreateProductCommand extends Command
     {
         // Display a list of categories for the user to choose from
         $categories = Category::all(['id', 'name']);
-        $this->info("Select a category to create a product:");
+        $categoryID = $this->ask('Enter the ID of the selected category or enter "new" to create a new category');
 
-        foreach ($categories as $category) {
-            $this->line("{$category->id}: {$category->name}");
-        }
+        if ($categoryID === 'new') {
+            // If the user wants to create a new category
+            $categoryName = $this->ask('Enter the name of the new category');
+            $newCategory = Category::create(['name' => $categoryName]);
+            $categoryID = $newCategory->id;
+            $this->info('New category created successfully.');
+        } else {
+            // Check if the selected category exists
+            $selectedCategory = Category::find($categoryID);
 
-        $categoryID = $this->ask('Enter the ID of the selected category');
-
-        // Check if the selected category exists
-        $selectedCategory = Category::find($categoryID);
-
-        if (!$selectedCategory) {
-            $this->error('Category not found. Please provide a valid category ID.');
-            return 0;
+            if (!$selectedCategory) {
+                $this->error('Category not found. Please provide a valid category ID or "new" to create a new category.');
+                return 0;
+            }
         }
 
         // Ask the user for product information

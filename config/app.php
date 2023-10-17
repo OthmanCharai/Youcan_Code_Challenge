@@ -1,5 +1,7 @@
 <?php
 
+use App\Repositories\ProductRepositoryProvider;
+
 return [
 
     /*
@@ -161,7 +163,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-
+        ProductRepositoryProvider::class,
         /*
          * Package Service Providers...
          */
