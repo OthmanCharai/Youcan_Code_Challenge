@@ -42,6 +42,9 @@ class Product extends Model
         return $this->belongsToMany(Category::class);
     }
 
+    /**
+     * @return array|mixed|string|string[]
+     */
     public function getUrlAttribute()
     {
         return str_replace('localhost', 'localhost:8000', $this->image);
