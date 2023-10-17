@@ -28,7 +28,10 @@ class ProductController extends Controller
     {
         $categoryId = $request->input('category', null);
         $maxPriceRange = $request->input('price', 0);
-        $products = $this->productRepository->getAllProducts($maxPriceRange, $categoryId);
+
+
+        $products = $this->productRepository
+            ->getAllProducts($maxPriceRange,  ($categoryId !== "null") ? $categoryId : null);
 
         return new ProductCollection($products);
     }
