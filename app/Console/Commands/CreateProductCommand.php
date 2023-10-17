@@ -41,6 +41,10 @@ class CreateProductCommand extends Command
     {
         // Display a list of categories for the user to choose from
         $categories = Category::all(['id', 'name']);
+        $this->info('Available Categories:');
+        foreach ($categories as $category) {
+            $this->line("ID: {$category->id}, Name: {$category->name}");
+        }
         $categoryID = $this->ask('Enter the ID of the selected category or enter "new" to create a new category');
 
         if ($categoryID === 'new') {
@@ -61,7 +65,10 @@ class CreateProductCommand extends Command
         // Ask the user for product information
         $productName = $this->ask('Enter the product name');
         $productDescription = $this->ask('Enter the product description');
-        $productPrice = $this->ask('Enter the product price');
+        $productPrice = $this->ask('Enter the product price, should be numeric please');
+        while (!is_numeric($productPrice)) {
+            $productPrice = $this->ask('Enter the product price, should be numeric please');
+        }
         $productImageUrl = $this->ask('Enter the product image path: image should be in storage/app/path to your file');
 
         // Create the product
