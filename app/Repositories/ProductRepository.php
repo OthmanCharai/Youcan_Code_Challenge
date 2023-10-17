@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -41,6 +42,14 @@ class ProductRepository implements ProductRepositoryInterface
         }
 
         return $query->get();
+    }
+
+    /**
+     * @return Category[]|Collection
+     */
+    public function getAllCategories()
+    {
+        return Category::all();
     }
 
 }
