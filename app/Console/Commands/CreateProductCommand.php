@@ -46,8 +46,7 @@ class CreateProductCommand extends Command
         if ($categoryID === 'new') {
             // If the user wants to create a new category
             $categoryName = $this->ask('Enter the name of the new category');
-            $newCategory = Category::create(['name' => $categoryName]);
-            $categoryID = $newCategory->id;
+            $selectedCategory = Category::create(['name' => $categoryName]);
             $this->info('New category created successfully.');
         } else {
             // Check if the selected category exists
