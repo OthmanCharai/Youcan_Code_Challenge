@@ -1,7 +1,7 @@
 <template>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <router-link class="btn btn-primary mx-4" to="/"
-            >Create Product</router-link
+            >Products</router-link
         >
         <!--   <router-link class="btn btn-primary"> </router-link>  -->
     </nav>
@@ -75,7 +75,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted,reactive } from "vue";
 import axios from "axios";
 import { BASE_URL } from "../../config";
 const categories = ref([]);
@@ -92,7 +92,7 @@ onMounted(() => {
         });
 });
 
-const formData = ref({
+const formData = reactive({
     name: "",
     price: 0,
     description: "",
@@ -113,12 +113,11 @@ const uploadFile = () => {
     form.append("description", formData.description);
     form.append("category_id", formData.category_id);
     form.append("image", formData.image);
-    console.log(formData);
-    debugger
+  
     axios
         .post(`${BASE_URL}/product`, form)
         .then((success) => {
-            console.log("okk");
+            
             uploadedSuccessed.value = true;
         })
         .catch((error) => {

@@ -47,6 +47,7 @@ class ProductController extends Controller
             if ($request->hasFile('image')) {
                 $file = $request->file('image');
                 $path = Storage::put('products', $file);
+                $url=Storage::url($path);
             }
         } catch (\Exception $exception) {
             throw new UploadImageException(
@@ -55,7 +56,7 @@ class ProductController extends Controller
             );
         }
 
-        $product = $this->productRepository->storeProduct(array_merge($request->validated(), ['image' => $path]));
+        $product = $this->productRepository->storeProduct(array_merge($request->validated(), ['image' => $url]));
 
         return new ProductResource($product);
     }
