@@ -49,10 +49,10 @@ cp .env.example .env
 #### and here we go you are ready to go
 ## Features
 - This is a laravel Vue js project
-- Expose a Reest api using laravel
-- Each Features (products,categories) should have a sperate routes file under routes/api folder
-- Using Repositery DP, it's may be an overenginiring in this small project but it's very powerfull and keep code orinised
-- Handle Exception each excption has a code
+- Expose a Rest api using laravel
+- Each Features (products,categories) should have a  route file under routes/api folder
+- Using the Repository design pattern may seem like over-engineering for this small project, but it's a powerful approach that helps keep the code organized
+- Handle Exception each exception has a code
 - A simple test for store product
 - php artisan product:create
   -- will allow you to create a new product via cli
