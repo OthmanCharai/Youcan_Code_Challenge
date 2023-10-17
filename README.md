@@ -1,6 +1,6 @@
 # YouCan Test Challenge 
 
-**Project Description**: Made By othman Charai.
+**Project Description**: a simple laravel vue application Made By othman Charai.
 
 ## Local Installation and Setup
 
@@ -47,7 +47,7 @@ cp .env.example .env
 7:  npm run watch
 ```
 #### and here we go you are ready to go
-##Features
+## Features
 - This is a laravel Vue js project
 - Expose a Reest api using laravel
 - Each Features (products,categories) should have a sperate routes file under routes/api folder
