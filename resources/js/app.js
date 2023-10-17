@@ -5,7 +5,7 @@ import { createApp } from "vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 // Components go here
-import ProductIndex from "./components/products/index";
+import ProductIndex from "./views/products/index.vue";
 
 // define variables & const
 const routes = [

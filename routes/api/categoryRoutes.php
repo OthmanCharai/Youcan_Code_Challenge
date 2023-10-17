@@ -8,7 +8,7 @@ Route::group(
         'prefix' => 'category'
     ],
     function () {
-        Route::get('/', [ProductController::class, 'getAllCategories'])->name('category.index');
 
+        Route::get('/', [ProductController::class, 'getAllCategories'])->name('category.index');
     }
 );
