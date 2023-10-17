@@ -47,9 +47,14 @@ cp .env.example .env
 7:  npm run watch
 ```
 #### and here we go you are ready to go
-
-## Feature
-
-
-
+##Features
+- This is a laravel Vue js project
+- Expose a Reest api using laravel
+- Each Features (products,categories) should have a sperate routes file under routes/api folder
+- Using Repositery DP, it's may be an overenginiring in this small project but it's very powerfull and keep code orinised
+- Handle Exception each excption has a code
+- A simple test for store product
+- php artisan product:create
+  -- will allow you to create a new product via cli
+- Vue 3 with setup script
 
