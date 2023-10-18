@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\Products;
 
 interface ProductRepositoryInterface
 {
@@ -17,9 +17,5 @@ interface ProductRepositoryInterface
      */
     public function getAllProducts(float $maxPriceRange, int $categoryId);
 
-    /**
-     * @return mixed
-     */
-    public function getAllCategories();
 
 }

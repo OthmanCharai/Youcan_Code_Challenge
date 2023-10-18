@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\Products;
 
 use App\Models\Category;
 use App\Models\Product;
@@ -42,14 +42,6 @@ class ProductRepository implements ProductRepositoryInterface
         }
 
         return $query->get();
-    }
-
-    /**
-     * @return Category[]|Collection
-     */
-    public function getAllCategories()
-    {
-        return Category::all();
     }
 
 }

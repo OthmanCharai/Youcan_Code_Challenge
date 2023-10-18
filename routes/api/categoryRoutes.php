@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(
@@ -9,6 +9,6 @@ Route::group(
     ],
     function () {
 
-        Route::get('/', [ProductController::class, 'getAllCategories'])->name('category.index');
+        Route::get('/', CategoryController::class)->name('category.index');
     }
 );

@@ -1,6 +1,7 @@
 <?php
 
-use App\Repositories\ProductRepositoryProvider;
+use App\Repositories\Categories\CategoryRepositoryProvider;
+use App\Repositories\Products\ProductRepositoryProvider;
 
 return [
 
@@ -164,6 +165,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         ProductRepositoryProvider::class,
+        CategoryRepositoryProvider::class,
         /*
          * Package Service Providers...
          */

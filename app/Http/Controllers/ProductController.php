@@ -7,7 +7,7 @@ use App\Http\Requests\ProductStoreRequest;
 use App\Http\Resources\CategoryCollection;
 use App\Http\Resources\ProductCollection;
 use App\Http\Resources\ProductResource;
-use App\Repositories\ProductRepositoryInterface;
+use App\Repositories\Products\ProductRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -59,15 +59,6 @@ class ProductController extends Controller
         $product = $this->productRepository->storeProduct(array_merge($request->validated(), ['image' => $url]));
 
         return new ProductResource($product);
-    }
-
-    /**
-     * @return CategoryCollection
-     */
-    public function getAllCategories(): CategoryCollection
-    {
-        $categories = $this->productRepository->getAllCategories();
-        return new CategoryCollection($categories);
     }
 
 }
