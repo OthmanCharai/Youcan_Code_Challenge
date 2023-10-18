@@ -2,9 +2,15 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Requests\CategoryStoreRequest;
+use App\Http\Requests\ProductStoreRequest;
 use App\Models\Category;
-use App\Models\Product;
+use App\Repositories\Categories\CategoryRepositoryInterface;
+use App\Repositories\Products\ProductRepositoryInterface;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class CreateProductCommand extends Command
 {
@@ -27,62 +33,127 @@ class CreateProductCommand extends Command
      *
      * @return void
      */
-    public function __construct()
+
+
+    protected ProductRepositoryInterface $productRepository;
+
+    protected CategoryRepositoryInterface $categoryRepository;
+
+    public function __construct(
+        ProductRepositoryInterface  $productRepository,
+        CategoryRepositoryInterface $categoryRepository
+    )
     {
         parent::__construct();
+        $this->productRepository = $productRepository;
+        $this->categoryRepository = $categoryRepository;
     }
 
     /**
      * Execute the console command.
      *
      * @return int
+     * @throws ValidationException
      */
     public function handle(): int
     {
+        // Get or Create a new Category
+        $category = $this->handleCategoryCreation();
+
+        //Create a new Product
+        $this->handleProductCreation($category->id);
+
+        return 1;
+    }
+
+    /**
+     * handleCategoryCreation Creation and display
+     * @return Category
+     * @throws ValidationException
+     */
+    private function handleCategoryCreation(): Category
+    {
         // Display a list of categories for the user to choose from
-        $categories = Category::all(['id', 'name']);
+        $categories = $this->categoryRepository->getAllCategories();
         $this->info('Available Categories:');
-        foreach ($categories as $category) {
-            $this->line("ID: {$category->id}, Name: {$category->name}");
-        }
+        $this->table(
+            ['Id', 'Parent Category Id', 'Name', 'Created At', 'Updated At'],
+            $categories->toArray()
+        );
+
         $categoryID = $this->ask('Enter the ID of the selected category or enter "new" to create a new category');
 
         if ($categoryID === 'new') {
-            // If the user wants to create a new category
-            $categoryName = $this->ask('Enter the name of the new category');
-            $selectedCategory = Category::create(['name' => $categoryName]);
+
+            $categoryData = [
+                'name' => $this->ask('Enter the name of the new category')
+            ];
+
+            $categoryValidator = Validator::make($categoryData, (new CategoryStoreRequest())->rules());
+
+            $this->showErrorMessage($categoryValidator);
+
+            $categoryValidatedData = $categoryValidator->validated();
+
             $this->info('New category created successfully.');
-        } else {
-            // Check if the selected category exists
-            $selectedCategory = Category::find($categoryID);
 
-            if (!$selectedCategory) {
-                $this->error('Category not found. Please provide a valid category ID or "new" to create a new category.');
-                return 0;
-            }
+            return $this->categoryRepository->storeCategory($categoryValidatedData);
         }
 
-        // Ask the user for product information
-        $productName = $this->ask('Enter the product name');
-        $productDescription = $this->ask('Enter the product description');
-        $productPrice = $this->ask('Enter the product price, should be numeric please');
-        while (!is_numeric($productPrice)) {
-            $productPrice = $this->ask('Enter the product price, should be numeric please');
+        try {
+            return $this->categoryRepository->findById($categoryID);
+        } catch (ModelNotFoundException $exception) {
+            $this->info($exception->getMessage());
+            exit();
         }
-        $productImageUrl = $this->ask('Enter the product image path: image should be in storage/app/path to your file');
 
-        // Create the product
-        $product = new Product([
-            'name' => $productName,
-            'description' => $productDescription,
-            'price' => $productPrice,
-            'image' => storage_path($productImageUrl),
-        ]);
+    }
 
-        // Associate the product with the selected category
-        $selectedCategory->products()->save($product);
+
+    /**
+     * @param int $categoryId
+     * @return void
+     * @throws ValidationException
+     */
+    private function handleProductCreation(int $categoryId)
+    {
+
+        $productData = [
+            'name' => $this->ask('Enter the product name'),
+            'description' => $this->ask('Enter the product description'),
+            'price' => $this->ask('Enter the product price, should be numeric please'),
+            'image' => $this->ask('Enter the product image path: image should be in storage/app/path to your file'),
+            'category_id' => $categoryId
+        ];
+
+        //
+        $productValidator = Validator::make($productData, array_merge(
+            (new ProductStoreRequest())->rules(),
+            ['image' => 'required']
+        ));
+
+        $this->showErrorMessage($productValidator);
+
+        $validatedData = $productValidator->validated();
+
+        $product = $this->productRepository->storeProduct($validatedData);
 
         $this->info('Product created successfully!');
-        return 1;
+
+    }
+
+    /**
+     * @param $validator
+     * @return void
+     */
+    private function showErrorMessage($validator)
+    {
+        if ($validator->fails()) {
+
+            foreach ($validator->errors()->all() as $error) {
+                $this->error($error);
+            }
+            exit(1);
+        }
     }
 }

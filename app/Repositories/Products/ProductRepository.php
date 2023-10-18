@@ -14,7 +14,7 @@ class ProductRepository implements ProductRepositoryInterface
      * @param array $data
      * @return mixed
      */
-    public function storeProduct(array $data)
+    public function storeProduct(array $data):Product
     {
         $product = Product::create($data);
         $product->categories()->syncwithoutdetaching($data['category_id']);
@@ -27,7 +27,7 @@ class ProductRepository implements ProductRepositoryInterface
      * @return Builder[]|Collection
      */
 
-    public function getAllProducts(float $maxPriceRange = 0, int $categoryId = null)
+    public function getAllProducts(float $maxPriceRange = 0, int $categoryId = null):\Illuminate\Support\Collection
     {
         $query = Product::with('categories');
 
