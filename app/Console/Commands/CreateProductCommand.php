@@ -9,6 +9,7 @@ use App\Repositories\Categories\CategoryRepositoryInterface;
 use App\Repositories\Products\ProductRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -126,7 +127,9 @@ class CreateProductCommand extends Command
             'name' => $this->ask('Enter the product name'),
             'description' => $this->ask('Enter the product description'),
             'price' => $this->ask('Enter the product price, should be numeric please'),
-            'image' => $this->ask('Enter the product image path: image should be in storage/app/path to your file'),
+            'image' => $this->checkFileExist(
+                $this->ask('Enter the product image path: image should be in storage/app/path to your file')
+            ),
             'category_id' => $categoryId
         ];
 
@@ -149,12 +152,23 @@ class CreateProductCommand extends Command
     private function showErrorMessage($validator)
     {
         if ($validator->fails()) {
-
             foreach ($validator->errors()->all() as $error) {
                 $this->error($error);
             }
-
             exit(1);
         }
+    }
+
+    /**
+     * @param string $path
+     * @return string|void
+     */
+    private function checkFileExist(string $path)
+    {
+        if (!Storage::exists($path)) {
+            $this->info('file does note exists in storage/app folder');
+            exit(1);
+        }
+        return $path;
     }
 }
