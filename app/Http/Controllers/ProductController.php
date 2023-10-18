@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\UploadImageException;
 use App\Http\Requests\ProductStoreRequest;
-use App\Http\Resources\CategoryCollection;
 use App\Http\Resources\ProductCollection;
 use App\Http\Resources\ProductResource;
 use App\Repositories\Products\ProductRepositoryInterface;
@@ -43,6 +42,7 @@ class ProductController extends Controller
      */
     public function store(ProductStoreRequest $request): ProductResource
     {
+        $request->validate(['image' => 'mimes:jpeg,png,jpg,gif']);
         try {
             if ($request->hasFile('image')) {
                 $file = $request->file('image');

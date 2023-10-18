@@ -101,10 +101,14 @@ class CreateProductCommand extends Command
         }
 
         try {
+
             return $this->categoryRepository->findById($categoryID);
+
         } catch (ModelNotFoundException $exception) {
+
             $this->info($exception->getMessage());
-            exit();
+
+            exit(1);
         }
 
     }
@@ -126,19 +130,15 @@ class CreateProductCommand extends Command
             'category_id' => $categoryId
         ];
 
-        //
-        $productValidator = Validator::make($productData, array_merge(
-            (new ProductStoreRequest())->rules(),
-            ['image' => 'required']
-        ));
+        $productValidator = Validator::make($productData, (new ProductStoreRequest())->rules());
 
         $this->showErrorMessage($productValidator);
 
         $validatedData = $productValidator->validated();
 
-        $product = $this->productRepository->storeProduct($validatedData);
+        $this->productRepository->storeProduct($validatedData);
 
-        $this->info('Product created successfully!');
+        $this->info("Product created successfully!");
 
     }
 
@@ -153,6 +153,7 @@ class CreateProductCommand extends Command
             foreach ($validator->errors()->all() as $error) {
                 $this->error($error);
             }
+
             exit(1);
         }
     }
