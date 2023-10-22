@@ -41,7 +41,7 @@ abstract class CommonException extends Exception
         );
 
         // If no message is defined, default message is used
-        if (!$message || preg_match("/exceptions.exception_/i", $message)) {
+        if (!$message) {
             $message = Lang::get('exceptions.exception_' . self::DEFAULT_CODE);
         }
 
